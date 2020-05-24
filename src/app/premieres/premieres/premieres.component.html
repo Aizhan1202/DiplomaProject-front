@@ -1,0 +1,19 @@
+
+<h1 *ngIf="isEmpty()">There are no premieres this week</h1>
+<h1 *ngIf="!isEmpty()">Don't miss {{premieres?.length}} premieres of this week!</h1>
+<div class="row mt-5">
+    <!-- <ng-container *ngFor="let movie of filteredByNameMovies | paginate: { itemsPerPage: 15, currentPage: p } ; let i = index"> -->
+      <ng-container *ngFor="let p of premieres; let i = index">
+      <div class="col mt-5">
+        <div class="card" style="width: 15rem;">
+          <img src="movie.imageUrl" class="card-img-top" alt="Card image cap">
+          <div class="card-body">
+            <h5 class="card-title">{{p.name}}</h5>
+            <p class="card-text">{{p.genre}}</p>
+            <a [routerLink]="['/movies/', p.id]" class="btn btn-outline-dark">View more</a>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="(i + 1) % 3 === 0" class="w-100"> </div>
+    </ng-container>
+  </div> 

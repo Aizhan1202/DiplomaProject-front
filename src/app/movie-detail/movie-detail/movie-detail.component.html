@@ -1,0 +1,166 @@
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+
+<div class="row">
+  <div class="col-md-12"  id="detail">
+    <div class="row" style="margin-top: 20px;">
+      <div class="col-md-6">
+        <div class="card" style="width: 18rem;">
+            <img src="http://127.0.0.1:8887/{{movie.movie_logo}}" class="card-img-top">
+            <div class="card-body">
+              <h5 class="card-title"></h5>
+              <p class="card-text"></p>                
+            </div>
+          </div>
+      </div>
+
+  <div class="col-md-6">
+    <!-- <form> -->
+        <div class="form-group" >
+            <label for="name">Name: </label>
+            <h1 
+            type="text" class="form-control">{{movie.name}}</h1>
+        </div>    
+        <div class="form-group">
+            <label for="genre">Genre</label>
+            <h1 
+            type="text" class="form-control">{{movie.genre}}</h1>
+        </div>
+        <div class="form-group">
+            <label for="description">Description</label>
+            <h1 style="height: 100px;"
+            type="text" class="form-control">{{movie.description}}</h1>
+        </div>
+        <div class="form-group">
+          <label for="description">Country</label>
+          <h1 
+          type="text" class="form-control">{{movie.country}}</h1>
+        </div>
+        <div class="form-group">
+          <label for="description">Directed by:</label>
+          <h1 
+          type="text" class="form-control">{{movie.directed_by}}</h1>
+        </div>
+        <div class="form-group">
+          <label for="description">Price:</label>
+          <h1 
+          type="text" class="form-control">{{movie.price}}</h1>
+        </div>
+        <button *ngIf="!isInFavourite()"  type="button"
+          (click)="addToFavourites()" 
+          class="btn btn-primary btn-block active">Add to favourites</button>
+        <button *ngIf="isInFavourite()" 
+          routerLink="/movies/favorite"              
+          class="btn btn-success btn-block">This movie is in your FAVORITES</button>
+        <!-- ////////////////////////RATING///////////////////////////////-->
+        <div *ngIf="authService.isLoggedIn()" class="row" style="margin-top: 20px;">
+            <div class="col">
+              <ngb-rating class="star" max="5" [(rate)]="rating"></ngb-rating>
+            </div>
+            <div class="col-md-6">
+              <button style="margin-top: 20px;" *ngIf="checkIsNotRated()" type="button" class="btn btn-outline-primary active"
+              (click)="rateMovie()"> Rate Movie </button> 
+              <div  style="margin-top: 20px;">
+                <a  *ngIf="!checkIsNotRated()"> You have rated this movie </a>
+              </div>
+            </div>          
+         </div>
+        <!--//////////////////////////RATING//////////////////////////////-->
+</div>
+</div>
+  </div>
+  
+
+    
+    
+
+    <hr>
+    <div class="col-md-12" style="margin-top: 15px;" >
+      <div class="btn-group btn-group-justified  col-md-12" style="margin-top: 20px;">
+        <button id="similar" class="btn btn-secondary" type="button" (click)=toggleDisplayDiv2() >SIMILAR MOVIES - BY USER RATINGS</button>
+        <button id="similar" class="btn btn-secondary" type="button" (click)=toggleDisplayDiv1()>SIMILAR MOVIES - BY GENRE</button>
+    </div>
+    <div [hidden]="isShowDiv1">           
+        <div class="row">
+          <!-- <ng-container *ngFor="let movie of similarMoviesByUserRatings; let i = index">  -->
+          <ng-container *ngFor="let movie of similarMoviesByContent; let i = index"> 
+            <div class="col mt-5" style="margin-left: 25px;">
+              <div class="card" style="width: 11rem;">
+                <img src = "http://127.0.0.1:8887/{{movie.movie_logo}}" class="card-img-top" alt="Card image cap">
+                <div class="card-body">
+                  <h5 class="card-title">{{movie.name}}</h5>
+                  <p class="card-text">{{movie.genre}}</p>
+                  <!-- <span  *ngFor="let item of [].constructor(movie.rating); let i = index">
+                    <span style="color: orange" class="fa fa-star checked"></span>
+                  </span> -->
+                  <p style="margin-top: 15px;"><a [routerLink]="['/movies/', movie.id]" class="btn btn-outline-dark">View more</a></p>
+                </div>
+              </div>
+            </div>
+            <div *ngIf="(i + 1) % 5 === 0" class="w-100"> </div>
+        </ng-container>
+    </div>
+    </div>
+    <div [hidden]="isShowDiv2">
+          <div class="row">
+            <ng-container *ngFor="let movie of similarMoviesByContent; let i = index">
+              <div class="col mt-5" style="margin-left: 20px;">
+                <div class="card" style="width: 11rem;">
+                  <img src = "http://127.0.0.1:8887/{{movie.movie_logo}}" class="card-img-top" alt="Card image cap">
+                  <div class="card-body">
+                    <h5 class="card-title">{{movie.name}}</h5>
+                    <p class="card-text">{{movie.genre}}</p>
+                    <!-- <span  *ngFor="let item of [].constructor(movie.rating); let i = index">
+                      <span style="color: orange" class="fa fa-star checked"></span>
+                    </span> -->
+                    <p style="margin-top: 15px;"><a [routerLink]="['/movies/', movie.id]" class="btn btn-outline-dark">View more</a></p>
+                  </div>
+                </div>
+              </div>
+              <div *ngIf="(i + 1) % 5 === 0" class="w-100"> </div>
+          </ng-container>
+        </div>
+    </div>
+    </div>
+
+
+    
+
+
+
+            <div class="col-md-12" id="detail" style="margin-top: 15px;">
+                <h1 style="margin-top: 20px;">Comments: </h1>
+                    <div style="margin: 30px;" class="form-group" *ngFor="let c of comment; let i = index" >
+                        <div class="row">
+                          <label class="col-form-label" >{{users[c.created_by-1].username}}: </label>
+                          <div class="col-sm-8">
+                              <div class="input-group mb-3">
+                                  <h1 type="text" class="form-control"  aria-label="Recipient's username" aria-describedby="button-addon2"> {{c.content}} </h1>
+                                  <div class="input-group-append">
+                                    <button (click)="deleteComment(c.id)" class="btn btn-outline-danger" type="button" id="button-addon2">Delete</button>
+                                    <button *ngIf="authService.isLoggedIn()" (click)="createCommentLikes(c.id)" style="margin-left: 10px;" type="button" class="btn btn-success"><i class="fa fa-thumbs-up"
+                                      aria-hidden="true">~{{c.like_count}}</i></button>
+                                  </div>
+                                </div>
+                          </div>
+                        </div>
+                    </div> 
+                    <div *ngIf="authService.isLoggedIn()" class="col-md-10" style="margin-top: 50px;">
+                        <div class="form-group row">
+                                <div class="col-sm-7">
+                                    <h3 for="exampleFormControlTextarea1">Post your comment: </h3>
+                                    <textarea [(ngModel)]="newComment.content"
+                                    class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                                    <button (click)="createComment()" class="btn btn-outline-success btn-block"> POST </button>
+                                </div>                                                  
+                        </div>
+                    </div> 
+            </div>
+
+            
+            
+
+
+</div>
+    
+

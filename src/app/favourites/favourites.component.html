@@ -1,0 +1,24 @@
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<h1 *ngIf="isEmpty()">You did't add any movie to your FAVORITES</h1>
+<h1 *ngIf="!isEmpty()">You have {{favourites?.length}} movies in your FAVOURITES</h1>
+
+<div class="row mt-5">
+    <!-- <ng-container *ngFor="let movie of filteredByNameMovies | paginate: { itemsPerPage: 15, currentPage: p } ; let i = index"> -->
+      <ng-container *ngFor="let f of favourites; let i = index">
+      <div class="col mt-5">
+        <div class="card" style="width: 15rem;">
+          <img src="http://127.0.0.1:8887/{{f.movie_logo}}" class="card-img-top" alt="Card image cap">
+          <div class="card-body">
+            <h5 class="card-title">{{f.name}}</h5>
+            <p class="card-text">{{f.genre}}</p>
+            <a [routerLink]="['/movies/', f.id]" class="btn btn-outline-dark">View more</a>
+          </div>
+          <button  (click)="deleteFav(f.id)" type="button" class="btn btn-danger"><i class="fa fa-remove"
+            aria-hidden="true"></i></button>
+        </div>
+      </div>
+      <div *ngIf="(i + 1) % 3 === 0" class="w-100"> </div>
+    </ng-container>
+  </div> 
+
